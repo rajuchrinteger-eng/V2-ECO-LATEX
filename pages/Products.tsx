@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { 
   ArrowRight, Check, Thermometer, ShieldCheck, 
-  Sparkles, Layers, Box, Info, ChevronRight, 
+  Sparkles, Layers, Box, Info, ChevronRight, ChevronLeft,
   Star, Ruler, Wind, Droplets, Leaf, Package, 
   ArrowLeft, ShoppingBag, Globe
 } from 'lucide-react';
@@ -49,6 +49,9 @@ const TOPPER_PRODUCTS: TopperProduct[] = [
       "https://images.unsplash.com/photo-1614035030394-b6e5b01e0737?auto=format&fit=crop&q=80&w=1200", 
       "https://images.unsplash.com/photo-1566576721346-d4a3b4eaad5b?auto=format&fit=crop&q=80&w=1200", 
       "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=1200", 
+      "https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1584132911971-d351bccaf73a?auto=format&fit=crop&q=80&w=1200"
     ],
     highlights: [
       'Available in 2" and 3" profiles',
@@ -138,10 +141,18 @@ const TOPPER_PRODUCTS: TopperProduct[] = [
 
 const ImageGallery = ({ images }: { images: string[] }) => {
   const [activeImg, setActiveImg] = useState(images[0]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setActiveImg(images[0]);
   }, [images]);
+
+  const scrollThumbnails = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -200 : 200;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -153,16 +164,43 @@ const ImageGallery = ({ images }: { images: string[] }) => {
         />
         <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       </div>
-      <div className="grid grid-cols-5 gap-2">
-        {images.map((img, i) => (
-          <button 
-            key={i} 
-            onClick={() => setActiveImg(img)}
-            className={`aspect-square overflow-hidden rounded-sm border-2 transition-all ${activeImg === img ? 'border-eco-green scale-95' : 'border-transparent hover:border-eco-green/30'}`}
-          >
-            <img src={img} alt={`Thumb ${i}`} className="w-full h-full object-cover" />
-          </button>
-        ))}
+      
+      {/* Thumbnail Carousel with Arrows */}
+      <div className="relative group/thumbs">
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-2 overflow-x-auto no-scrollbar scroll-smooth px-1 py-1"
+        >
+          {images.map((img, i) => (
+            <button 
+              key={i} 
+              onClick={() => setActiveImg(img)}
+              className={`flex-shrink-0 w-24 aspect-square overflow-hidden rounded-sm border-2 transition-all ${activeImg === img ? 'border-eco-green scale-95 shadow-md' : 'border-transparent hover:border-eco-green/30'}`}
+            >
+              <img src={img} alt={`Thumb ${i}`} className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+        
+        {/* Navigation Arrows for Thumbnails */}
+        {images.length > 4 && (
+          <>
+            <button 
+              onClick={() => scrollThumbnails('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 w-8 h-8 bg-white border border-gray-100 shadow-lg rounded-full flex items-center justify-center text-eco-green-dark hover:bg-eco-green hover:text-white transition-all opacity-0 group-hover/thumbs:opacity-100 z-10"
+              aria-label="Scroll Left"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => scrollThumbnails('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 w-8 h-8 bg-white border border-gray-100 shadow-lg rounded-full flex items-center justify-center text-eco-green-dark hover:bg-eco-green hover:text-white transition-all opacity-0 group-hover/thumbs:opacity-100 z-10"
+              aria-label="Scroll Right"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

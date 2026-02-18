@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Menu, X, Leaf, Truck, UserCheck, Phone, ChevronRight, Facebook, Instagram, Linkedin, Mail } from 'lucide-react';
@@ -83,10 +84,9 @@ const Navigation = () => {
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-2' : 'bg-transparent py-4'}`}>
       <div className="container mx-auto px-6 flex justify-between items-center h-16 md:h-20">
-        {/* Logo - h-12 on mobile, h-16 on desktop to be large without breaking padding */}
         <Link to="/" className="flex items-center group">
           <img 
-            src="https://superb-moccasin-plat1phm0l.edgeone.app/ecolatexlogo%20(1)s.png" 
+            src="https://i.postimg.cc/sfNZWbqp/ecolatexlogo-(1)s.png" 
             alt="ECO LATEX Logo" 
             className={`h-12 md:h-16 w-auto transition-all duration-300 object-contain ${isTransparent ? 'brightness-0 invert' : ''}`}
           />
@@ -146,7 +146,7 @@ const Footer = () => {
           <div className="space-y-6">
             <div className="flex items-center gap-2">
                <img 
-                 src="https://superb-moccasin-plat1phm0l.edgeone.app/ecolatexlogo%20(1)s.png" 
+                 src="https://i.postimg.cc/sfNZWbqp/ecolatexlogo-(1)s.png" 
                  alt="ECO LATEX Logo" 
                  className="h-14 w-auto object-contain brightness-0 invert"
                />
